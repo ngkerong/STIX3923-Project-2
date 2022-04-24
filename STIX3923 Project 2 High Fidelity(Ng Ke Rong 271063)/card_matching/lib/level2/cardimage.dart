@@ -5,7 +5,7 @@ class Game2 {
   List<Color>? gameColors;
   List<String>? gameImg;
   
-  final String hiddenCardpath = "assets/images/hidden.png";
+  final String hiddenCardpath = "assets/images/dots.png";
   List<String> cards_list = [
     "assets/images/4.jpg",
     "assets/images/4.jpg",

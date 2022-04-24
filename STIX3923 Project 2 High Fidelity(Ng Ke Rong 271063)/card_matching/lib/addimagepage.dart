@@ -75,7 +75,7 @@ class _AddImagePageState extends State<AddImagePage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize: Size(screenWidth, screenHeight / 13)),
-                child: const Text('Add Product'),
+                child: const Text('Add Image'),
                 onPressed: () => {_newImageDialog(),}
                           
                         ),
@@ -194,7 +194,7 @@ class _AddImagePageState extends State<AddImagePage> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: const Text(
-            "Add this product",
+            "Add this image",
             style: TextStyle(),
           ),
           content: const Text("Are you sure?", style: TextStyle()),

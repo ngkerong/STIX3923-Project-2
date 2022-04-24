@@ -21,13 +21,13 @@ class UploadImagePage extends StatefulWidget {
 class UploadImagePageState extends State<UploadImagePage>{
 
   late List _cardList = [];
-  String textCenter = " ";
+  String textCenter = "Please Upload an Image";
   late double screenHeight, screenWidth;
   late ScrollController _scrollController;
-  int scrollcount = 6;
-  var pathAsset = "assets/images/add-image.png"; 
+  int scrollcount = 7;
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   String deviceID = " ";
+
 
   @override
   void initState() {
@@ -56,8 +56,7 @@ class UploadImagePageState extends State<UploadImagePage>{
         color: Colors.white,
       ),
       onPressed: () {
-      
-        
+        _loadCards();
       },
     ),
     IconButton(

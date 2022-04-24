@@ -3,8 +3,7 @@ import 'select_level_page.dart';
 import 'settingpage.dart';
 import 'uploadimagepage.dart';
 import 'dart:io';
-
-
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,7 +47,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   late double screenHeight, screenWidth;
-  
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("app in resumed");
+        //Play the Music
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        //Stop the music
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        break;
+      case AppLifecycleState.detached:
+        print("app in detached");
+        //Stop the music
+        break;
+    }
+  }
   
   @override
   Widget build(BuildContext context) {

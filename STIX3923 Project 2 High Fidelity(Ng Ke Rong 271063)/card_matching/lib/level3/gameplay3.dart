@@ -25,8 +25,10 @@ class GamePlay3PageState extends State<GamePlay3Page> {
   //game stats
   double latestScore = 0;
   double score = 0;
-  int timeleft = 180;
+  int timeleft = 0;
   double highestScore =0;
+  int latestTime = 0;
+  int fastestTime = 0;
 
   @override
   void initState(){
@@ -34,6 +36,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
     _game.initGame();
     _countTimeLeft();
      loadScore();
+     loadTime();
     _game.cards_list.shuffle();
   }
 
@@ -52,32 +55,48 @@ class GamePlay3PageState extends State<GamePlay3Page> {
     });
   }
 
+    void loadTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      fastestTime = (prefs.getInt('fatestTime3') ?? 0);
+    });
+  }
 
+  void updateTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setInt('fatestTime3', latestTime);
+      fastestTime = (prefs.getInt('fatestTime3') ?? 0);
+    });
+  }
 
   void _countTimeLeft()  {
     
     Timer.periodic(const Duration(seconds: 1), (timer){
-      if (timeleft > 0 ){
+      if (timeleft >= 0 ){
       setState(() {
-        timeleft--;
+        timeleft++;
         if (score == 400){
           timer.cancel();
-            
-          latestScore = score + (timeleft*0.25);
-          score = latestScore;
-            if (latestScore > highestScore){
-              updateScore();
-              
+            latestTime = timeleft;
+            if(timeleft <= 300){
+              latestScore = score + (50*100/timeleft);
+            }else if(timeleft > 300 && timeleft < 540){
+              latestScore = score + (25*100/timeleft);
+            }else{
+              latestScore = score + (10*100/timeleft);
             }
+          latestScore = double.parse(latestScore.toStringAsFixed(2));
+          score = latestScore;
+              if (latestScore > highestScore){
+                updateScore();
+                updateTime();
+              }
           successDialog();
         }
       });
-      } else{
-        timer.cancel();
-        failDialog();
-      }
+      } 
     });
-
   }
 
   @override
@@ -102,9 +121,16 @@ class GamePlay3PageState extends State<GamePlay3Page> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              cardInfo("Time", timeleft.toString()),
+              cardInfo("Time(s)", timeleft.toString()),
               cardInfo("Score", "$score"),
-              cardInfo("Highest","$highestScore")
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [ 
+              cardInfo("Highest Score","$highestScore"),
+              cardInfo("Fatest Time(s)","$fastestTime")
             ],
           ),
           SizedBox(
@@ -204,46 +230,6 @@ class GamePlay3PageState extends State<GamePlay3Page> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => super.widget));
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-  void failDialog(){
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Fail",
-            style: TextStyle(fontSize: 30, color: Colors.red, fontWeight: FontWeight.bold),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Retry",
-                style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => super.widget));
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "Exit",
-                style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
               },
             ),
           ],
