@@ -66,7 +66,7 @@ class GamePlayExPageState extends State<GamePlayExPage> {
 
   void getScore() async {
     setState((){
-      for(int i = 0; i <= newCardList.length; i++ ){
+      for(int i = 0; i < _cardList1.length; i++ ){
           scoreEx += 100;
       }
     });
@@ -278,6 +278,7 @@ class GamePlayExPageState extends State<GamePlayExPage> {
       newCardList.shuffle();
       gameImg = List.generate(newCardList.length, (index) => hiddenCardpath);
       getScore();
+      print(scoreEx);
       getLength();
      }
      );

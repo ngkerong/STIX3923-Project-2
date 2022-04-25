@@ -152,7 +152,7 @@ class DeleteImagePageState extends State<DeleteImagePage>{
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: const Text(
-            "Delete this product",
+            "Delete this image",
             style: TextStyle(),
           ),
           content: const Text("Are you sure?", style: TextStyle()),

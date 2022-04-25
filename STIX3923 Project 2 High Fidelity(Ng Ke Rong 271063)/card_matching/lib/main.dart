@@ -147,7 +147,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             mainAxisAlignment: MainAxisAlignment.center,
             
             children:  [
-            Container(
+            GestureDetector(
+            child: Container(
               decoration: BoxDecoration(
               border: Border.all(color: Colors.brown, width: 4),
               borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -161,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 Navigator.push(context, MaterialPageRoute(
                 builder: (BuildContext context) => const UploadImagePage()));
               },
-  ),),
+  ),)),
       SizedBox(width:screenWidth/10),
       Container(
               decoration: BoxDecoration(

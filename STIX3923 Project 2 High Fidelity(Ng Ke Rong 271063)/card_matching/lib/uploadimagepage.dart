@@ -24,7 +24,7 @@ class UploadImagePageState extends State<UploadImagePage>{
   String textCenter = "Please Upload an Image";
   late double screenHeight, screenWidth;
   late ScrollController _scrollController;
-  int scrollcount = 7;
+  int scrollcount = 10;
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   String deviceID = " ";
 
@@ -54,6 +54,7 @@ class UploadImagePageState extends State<UploadImagePage>{
       icon: const Icon(
         Icons.restart_alt,
         color: Colors.white,
+        size: 40.0
       ),
       onPressed: () {
         _loadCards();
@@ -63,16 +64,22 @@ class UploadImagePageState extends State<UploadImagePage>{
       icon: const Icon(
         Icons.add,
         color: Colors.white,
+        size: 40.0
       ),
       onPressed: () {
+        if(_cardList.length <= 7) {
           Navigator.push(context, MaterialPageRoute(
           builder: (BuildContext context) => const AddImagePage()));
+        }else{
+          imageDialog();
+        }
       },
     ),
     IconButton(
       icon: const Icon(
         Icons.delete,
         color: Colors.white,
+        size: 40.0
       ),
       onPressed: () {
          Navigator.push(context, MaterialPageRoute(
@@ -172,5 +179,32 @@ class UploadImagePageState extends State<UploadImagePage>{
     }
    }
 
+  void imageDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: const Text(
+            "Message",
+            style: TextStyle(fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
+          ),
+          content: const Text("The limited amount of image is 8. Please delete some of the images.", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Ok",
+                style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
  
   }
