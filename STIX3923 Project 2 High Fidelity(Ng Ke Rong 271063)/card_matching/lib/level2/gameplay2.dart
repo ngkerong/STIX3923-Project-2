@@ -28,12 +28,12 @@ class GamePlay2PageState extends State<GamePlay2Page> {
   double highestScore =0;
    int fastestTime= 0;
   int latestTime = 0;
+  int counter = 0;
 
   @override
   void initState(){
     super.initState();
     _game.initGame();
-    _countTimeLeft();
      loadScore();
      loadTime();
     _game.cards_list.shuffle();
@@ -57,7 +57,7 @@ class GamePlay2PageState extends State<GamePlay2Page> {
   void loadTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
-      fastestTime = (prefs.getInt('fatestTime2') ?? 0);
+      fastestTime = (prefs.getInt('fastestTime2') ?? 0);
     });
   }
 
@@ -65,7 +65,7 @@ class GamePlay2PageState extends State<GamePlay2Page> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setInt('fatestTime2', latestTime);
-      fastestTime = (prefs.getInt('fatestTime2') ?? 0);
+      fastestTime = (prefs.getInt('fastestTime2') ?? 0);
     });
   }
 
@@ -76,7 +76,7 @@ class GamePlay2PageState extends State<GamePlay2Page> {
       if (timeleft >= 0 ){
       setState(() {
         timeleft++;
-        if (score == 300){
+        if (score == 400){
           timer.cancel();
             latestTime = timeleft;
             if(timeleft <= 300){
@@ -92,6 +92,7 @@ class GamePlay2PageState extends State<GamePlay2Page> {
                 updateScore();
                 updateTime();
               }
+          counter = 0;
           successDialog();
         }
       });
@@ -130,7 +131,7 @@ class GamePlay2PageState extends State<GamePlay2Page> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
               cardInfo("Highest Score","$highestScore"),
-              cardInfo("Fatest Time(s)","$fastestTime")
+              cardInfo("Fastest Time(s)","$fastestTime")
             ],
           ),
           SizedBox(
@@ -148,6 +149,10 @@ class GamePlay2PageState extends State<GamePlay2Page> {
                     return GestureDetector(
                       onTap: () {
                         loadScore();
+                        counter++;
+                        if (counter == 1) {
+                        _countTimeLeft();
+                        }
                         setState(() {
                           //incrementing the clicks
                           _game.gameImg![index] = _game.cards_list[index];

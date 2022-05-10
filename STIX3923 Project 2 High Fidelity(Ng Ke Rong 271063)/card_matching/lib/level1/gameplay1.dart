@@ -28,13 +28,13 @@ class GamePlay1PageState extends State<GamePlay1Page> {
   double highestScore =0;
   int fastestTime= 0;
   int latestTime = 0;
+  int counter = 0;
 
   @override
   void initState(){
     super.initState();
     
     _game.initGame();
-    _countTimeLeft();
      loadScore();
      loadTime();
     _game.cards_list.shuffle();
@@ -59,15 +59,15 @@ class GamePlay1PageState extends State<GamePlay1Page> {
    void loadTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
-      fastestTime = (prefs.getInt('fatestTime') ?? 0);
+      fastestTime = (prefs.getInt('fastestTime') ?? 0);
     });
   }
 
   void updateTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setInt('fatestTime', latestTime);
-      fastestTime = (prefs.getInt('fatestTime') ?? 0);
+      prefs.setInt('fastestTime', latestTime);
+      fastestTime = (prefs.getInt('fastestTime') ?? 0);
     });
   }
 
@@ -94,7 +94,9 @@ class GamePlay1PageState extends State<GamePlay1Page> {
                 updateScore();
                 updateTime();
               }
+          counter = 0;
           successDialog();
+          
         }
       });
       } 
@@ -133,7 +135,7 @@ class GamePlay1PageState extends State<GamePlay1Page> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
               cardInfo("Highest Score","$highestScore"),
-              cardInfo("Fatest Time(s)","$fastestTime")
+              cardInfo("Fastest Time(s)","$fastestTime")
             ],
           ),
           SizedBox(
@@ -151,6 +153,10 @@ class GamePlay1PageState extends State<GamePlay1Page> {
                     return GestureDetector(
                       onTap: () {
                         loadScore();
+                        counter++;
+                        if (counter == 1) {
+                        _countTimeLeft();
+                        }
                         setState(() {
                           //incrementing the clicks
                           _game.gameImg![index] = _game.cards_list[index];

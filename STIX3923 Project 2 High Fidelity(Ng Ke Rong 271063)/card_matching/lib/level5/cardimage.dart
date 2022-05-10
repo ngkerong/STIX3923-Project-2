@@ -19,8 +19,12 @@ class Game5 {
     "assets/images/19.jpg",
     "assets/images/20.jpg",
     "assets/images/20.jpg",
+    "assets/images/26.jpg",
+    "assets/images/26.jpg",
+    "assets/images/27.jpg",
+    "assets/images/27.jpg",
   ];
-  final int cardCount = 12;
+  final int cardCount = 16;
   List<Map<int, String>> matchCheck = [];
 
   //methods

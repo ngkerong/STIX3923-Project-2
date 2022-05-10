@@ -39,6 +39,7 @@ class GamePlayExPageState extends State<GamePlayExPage> {
   int latestTime = 0;
   int fastestTime = 0; 
   int counter = 0;
+  int count = 0;
 
   @override
   void initState(){

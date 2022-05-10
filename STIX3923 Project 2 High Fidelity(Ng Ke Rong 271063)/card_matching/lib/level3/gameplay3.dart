@@ -29,12 +29,12 @@ class GamePlay3PageState extends State<GamePlay3Page> {
   double highestScore =0;
   int latestTime = 0;
   int fastestTime = 0;
+  int counter = 0;
 
   @override
   void initState(){
     super.initState();
     _game.initGame();
-    _countTimeLeft();
      loadScore();
      loadTime();
     _game.cards_list.shuffle();
@@ -58,7 +58,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
     void loadTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
-      fastestTime = (prefs.getInt('fatestTime3') ?? 0);
+      fastestTime = (prefs.getInt('fastestTime3') ?? 0);
     });
   }
 
@@ -66,7 +66,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setInt('fatestTime3', latestTime);
-      fastestTime = (prefs.getInt('fatestTime3') ?? 0);
+      fastestTime = (prefs.getInt('fastestTime3') ?? 0);
     });
   }
 
@@ -76,7 +76,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
       if (timeleft >= 0 ){
       setState(() {
         timeleft++;
-        if (score == 400){
+        if (score == 500){
           timer.cancel();
             latestTime = timeleft;
             if(timeleft <= 300){
@@ -92,6 +92,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
                 updateScore();
                 updateTime();
               }
+          counter = 0;
           successDialog();
         }
       });
@@ -130,7 +131,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
               cardInfo("Highest Score","$highestScore"),
-              cardInfo("Fatest Time(s)","$fastestTime")
+              cardInfo("Fastest Time(s)","$fastestTime")
             ],
           ),
           SizedBox(
@@ -139,7 +140,7 @@ class GamePlay3PageState extends State<GamePlay3Page> {
               child: GridView.builder(
                   itemCount: _game.gameImg!.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 4,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
                   ),
@@ -148,6 +149,10 @@ class GamePlay3PageState extends State<GamePlay3Page> {
                     return GestureDetector(
                       onTap: () {
                         loadScore();
+                        counter++;
+                        if (counter == 1) {
+                          _countTimeLeft();
+                        }
                         setState(() {
                           
                           _game.gameImg![index] = _game.cards_list[index];

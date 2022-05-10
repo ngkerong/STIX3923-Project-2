@@ -9,6 +9,7 @@ import 'levelextra/gameplayex.dart';
 import 'package:http/http.dart' as http;
 import 'package:card_matching/model/config.dart';
 import 'dart:convert';
+import 'colorsettings.dart';
 
 class SelectLevelPage extends StatefulWidget {
   const SelectLevelPage({Key? key}) : super(key: key);
@@ -23,12 +24,13 @@ class SelectLevelPageState extends State<SelectLevelPage>{
   late double screenHeight, screenWidth;
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   late List _cardList = [];
+  final Color1 _color1 = Color1();
 
   @override
   void initState() {
     super.initState();
     _loadCards();
-   
+    _color1.setColor();
   }
 
   @override
@@ -43,7 +45,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
       ),
       body: Container(
         alignment: Alignment.center,
-        color: const Color(0xFFFFECB3),
+        color: Color(_color1.bgm1()),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -209,7 +211,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
                     imageDialog();
                     }
                   },
-                  child: const Text("Ex",style: TextStyle(fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold)),
+                  child: const Text("Sp",style: TextStyle(fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold)),
                 ),
             ),
             
