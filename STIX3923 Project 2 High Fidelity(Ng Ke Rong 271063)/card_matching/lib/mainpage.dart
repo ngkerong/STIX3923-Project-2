@@ -5,7 +5,6 @@ import 'uploadimagepage.dart';
 import 'dart:io';
 import 'package:flame_audio/flame_audio.dart';  
 import 'package:shared_preferences/shared_preferences.dart';
-import 'colorsettings.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -21,62 +20,77 @@ class _MyHomePageState extends State<MyHomePage> {
   late double screenHeight, screenWidth;
   bool audio = true;
   String getColor = '';
-  var colCode = '';
-  
+  String selectCol = " ";
+  String latestCol = " ";
+  Color color1 = Color(0xFFFFECB3);
+  Color color2 = Color(0xFFE1F5FE);
+  Color color3=  Color(0xFFFFCDD2); 
+  Color color4 = Color(0xFFFDD54F);
+  Color color5 = Color(0xFF8C9EFF);
+  Color color6 = Color(0xFFF48FB1);
+  String valueString =" ";
+  int value = 0;
+  Color otherColor = Color(0x00000000);
+  Color otherColor2 = Color(0x00000000);
 
   @override
   void initState(){
     super.initState();
+    setState((){
     FlameAudio.bgm.initialize();
     FlameAudio.bgm.play('bgm.mp3', volume: 100);
-    setColor();
-    getBgmColor();
+    loadColor();
+    });
   }
 
-  void setColor() async{
+  void loadColor() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    getColor = (prefs.getString('colorCode') ?? "Default"); 
-    print(getColor);
+    setState((){
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
+      bgm2();
+    });
   }
 
-
-  getBgmColor(){
-    switch (getColor) {
+   void bgm1() async{
+  
+    switch (selectCol) {
       case "Default":
-        return Color(0xFFFFECB3);
-        
+        latestCol = color1.toString();
+        break;
+
       case "Blue":
-        return Color(0xFFE1F5FE);
-        
+        latestCol = color2.toString();
+        break;
+
       case "Red":
-        return Color(0xFFFFCDD2);   
+        latestCol = color3.toString();
+        break;
     }
-  }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor = Color(value);
+}
 
-  void loadAudio() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
-      audio = (prefs.getBool('getAudio') ?? true);
-    });
-  }
+void bgm2() async{
+  
+    switch (selectCol) {
+      case "Default":
+        latestCol = color4.toString();
+        break;
 
-  void offAudio() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
-      
-      prefs.setBool('get', false);
-      audio = (prefs.getBool('getAudio') ?? true);
-    });
-  }
+      case "Blue":
+        latestCol = color5.toString();
+        break;
 
-  void onAudio() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
-      
-      prefs.setBool('get', true);
-      audio = (prefs.getBool('getAudio') ?? true);
-    });
-  }
+      case "Red":
+        latestCol = color6.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor2 = Color(value);
+}
 
 
   @override
@@ -90,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     
     return  Scaffold(
     body: Container(
-      color: Color(0xFFFFECB3),
+      color: otherColor,
       child: Stack(
       children: [
         upperHalf(context),
@@ -107,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
         clipper: CurvedBottomClipper(),
         child:
           Container(
-          color: const Color(0xFFFDD54F),
+          color: otherColor2,
           width: screenWidth,
           height: 300,
           child:  Center(
@@ -208,8 +222,10 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.settings_outlined),
               color: Colors.brown,
               onPressed: () {
-                 Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => const SettingPage()));
+                Navigator.push( context, MaterialPageRoute( builder: (context) => SettingPage()), 
+              ).then((value) => setState(() {
+                loadColor();
+              }));
               },
   ),),
       ],

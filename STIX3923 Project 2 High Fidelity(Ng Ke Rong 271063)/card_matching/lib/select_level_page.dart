@@ -9,7 +9,7 @@ import 'levelextra/gameplayex.dart';
 import 'package:http/http.dart' as http;
 import 'package:card_matching/model/config.dart';
 import 'dart:convert';
-import 'colorsettings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectLevelPage extends StatefulWidget {
   const SelectLevelPage({Key? key}) : super(key: key);
@@ -24,14 +24,51 @@ class SelectLevelPageState extends State<SelectLevelPage>{
   late double screenHeight, screenWidth;
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   late List _cardList = [];
-  final Color1 _color1 = Color1();
+  String selectCol = " ";
+  String latestCol = " ";
+  Color color1 = Color(0xFFFFECB3);
+  Color color2 = Color(0xFFE1F5FE);
+  Color color3=  Color(0xFFFFCDD2); 
+  String valueString =" ";
+  int value = 0;
+  Color otherColor = Color(0x00000000);
 
   @override
   void initState() {
     super.initState();
+    setState(() {
     _loadCards();
-    _color1.setColor();
+    loadColor();
+    });
   }
+
+    void loadColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
+    });
+  }
+
+  void bgm1() async{
+  
+    switch (selectCol) {
+      case "Default":
+        latestCol = color1.toString();
+        break;
+
+      case "Blue":
+        latestCol = color2.toString();
+        break;
+
+      case "Red":
+        latestCol = color3.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor = Color(value);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +82,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
       ),
       body: Container(
         alignment: Alignment.center,
-        color: Color(_color1.bgm1()),
+        color: otherColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -55,7 +92,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFFFF8f00),
+                  color: Colors.brown,
                   fontSize: 28
                 ),
               ),

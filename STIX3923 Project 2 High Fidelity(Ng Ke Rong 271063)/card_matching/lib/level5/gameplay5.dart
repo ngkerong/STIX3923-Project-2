@@ -19,6 +19,19 @@ class GamePlay5PageState extends State<GamePlay5Page> {
   //setting text style
   bool hideTest = false;
   final Game5 _game = Game5();
+  String getColor = '';
+  String selectCol = " ";
+  String latestCol = " ";
+  Color color1 = Color(0xFFFFECB3);
+  Color color2 = Color(0xFFE1F5FE);
+  Color color3=  Color(0xFFFFCDD2); 
+  String valueString =" ";
+  int value = 0;
+  Color otherColor = Color(0x00000000);
+  Color color4 = Color(0xFFFDD54F);
+  Color color5 = Color(0xFF8C9EFF);
+  Color color6 = Color(0xFFF48FB1);
+Color otherColor2 = Color(0x00000000);
 
   //game stats
   double latestScore = 0;
@@ -36,6 +49,7 @@ class GamePlay5PageState extends State<GamePlay5Page> {
      loadScore();
      loadTime();
     _game.cards_list.shuffle();
+    loadColor();
   }
 
   void loadScore() async {
@@ -98,10 +112,59 @@ class GamePlay5PageState extends State<GamePlay5Page> {
     });
   }
 
+  void loadColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
+      bgm2();
+    });
+  }
+
+ void bgm1() async{
+  
+    switch (selectCol) {
+      case "Default":
+        latestCol = color1.toString();
+        break;
+
+      case "Blue":
+        latestCol = color2.toString();
+        break;
+
+      case "Red":
+        latestCol = color3.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor = Color(value);
+}
+
+void bgm2() async{
+  
+    switch (selectCol) {
+      case "Default":
+        latestCol = color4.toString();
+        break;
+
+      case "Blue":
+        latestCol = color5.toString();
+        break;
+
+      case "Red":
+        latestCol = color6.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor2 = Color(value);
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:const Color(0xFFFFECB3),
+      backgroundColor:otherColor,
       appBar: AppBar(
         title: const Text("Back",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
@@ -184,7 +247,7 @@ class GamePlay5PageState extends State<GamePlay5Page> {
                       child: Container(
                         padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFB46A),
+                          color: otherColor2,
                           borderRadius: BorderRadius.circular(8.0),
                           image: DecorationImage(
                             image: AssetImage(_game.gameImg![index]),

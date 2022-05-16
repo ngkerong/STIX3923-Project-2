@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flame_audio/flame_audio.dart';  
 import 'package:shared_preferences/shared_preferences.dart';
-import 'colorsettings.dart';
-
 
 
 class SettingPage extends StatefulWidget {
@@ -16,35 +14,35 @@ class SettingPage extends StatefulWidget {
 class SettingPageState extends State<SettingPage>{
 
   late double screenHeight, screenWidth;
+
   bool audio = true;
+  String latestCol = " ";
   String selectCol = " ";
   List<String> colorlist = [
      "Default",
      "Blue",
      "Red",
    ];
-   final Color1 _color1 = Color1();
+  Color color1 = Color(0xFFFFECB3);
+  Color color2 = Color(0xFFE1F5FE);
+  Color color3=  Color(0xFFFFCDD2); 
+  String valueString =" ";
+  int value = 0;
+  Color otherColor = Color(0x00000000);
 
-   controlAudio() {
-    
-    if(audio){
-      return const Icon(Icons.volume_up_outlined);
-    }else{
-      return const Icon(Icons.volume_mute);
-    }
-  
-  }
 
   void initState(){
     super.initState();
-    loadColor();
-    _color1.setColor();
+    setState((){
+      loadColor();
+    });
   }
 
   void loadColor() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
       selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
     });
   }
 
@@ -60,7 +58,7 @@ class SettingPageState extends State<SettingPage>{
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        color:  Color(_color1.bgm1()),
+        color:otherColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,19 +83,22 @@ class SettingPageState extends State<SettingPage>{
 
             child: IconButton(
               iconSize: 60,
-              icon: controlAudio(),
+              icon:Icon(audio ? Icons.volume_up_outlined : Icons.volume_mute_outlined),
               color: Colors.brown,
               onPressed: () {
-                if(audio){
+                setState(() {
+                  audio = !audio;
+                });
+                if(!audio){
                   FlameAudio.bgm.pause();
-                  audio = false;
-                  controlAudio();
+                  
                 }else{
                   FlameAudio.bgm.resume();
-                  audio = true;
-                  controlAudio();
+                  
                 }
+
               },
+             
   ),),
             SizedBox(height: screenHeight/18),
             const Text(
@@ -139,21 +140,32 @@ class SettingPageState extends State<SettingPage>{
   }
   Future <void> _color() async {
      SharedPreferences prefs = await SharedPreferences.getInstance();
-
      setState((){
-        switch (selectCol) {
-          case "Default":
-            prefs.setString('colorCode', "Default");
-            break;
-          case "Blue":
-            prefs.setString('colorCode', "Blue");
-            break;
-          case "Red":
-            prefs.setString('colorCode', "Red");
-            break; 
-        }
-      _color1.setColor();
-
+      prefs.setString('colorCode', selectCol);
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
       });
   }
+  
+void bgm1() async{
+  
+  setState((){
+    switch (selectCol) {
+      case "Default":
+        latestCol = color1.toString();
+        break;
+
+      case "Blue":
+        latestCol = color2.toString();
+        break;
+
+      case "Red":
+        latestCol = color3.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor = Color(value);
+    });
+}
 }
