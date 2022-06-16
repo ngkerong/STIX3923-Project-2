@@ -69,7 +69,8 @@ Color color1 = Color(0xFFFFECB3);
       highestScore = (prefs.getDouble('highScore') ?? 0);
     });
   }
-
+  
+  
 
    void loadTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

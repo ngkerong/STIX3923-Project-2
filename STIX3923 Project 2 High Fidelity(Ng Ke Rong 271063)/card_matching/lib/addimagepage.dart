@@ -230,7 +230,7 @@ class _AddImagePageState extends State<AddImagePage> {
     
     FocusScope.of(context).unfocus();
     ProgressDialog progressDialog = ProgressDialog(context,
-        message: const Text("Adding new product.."),
+        message: const Text("Adding new image.."),
         title: const Text("Processing..."));
     progressDialog.show();
 

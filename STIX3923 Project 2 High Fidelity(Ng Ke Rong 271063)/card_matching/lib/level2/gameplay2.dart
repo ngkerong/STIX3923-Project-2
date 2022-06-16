@@ -49,11 +49,13 @@ Color otherColor2 = Color(0x00000000);
   void initState(){
     super.initState();
     _game.initGame();
+  
      loadScore();
      loadTime();
     _game.cards_list.shuffle();
     loadColor();
   }
+
 
   void loadScore() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,7 +82,7 @@ Color otherColor2 = Color(0x00000000);
   void updateTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setInt('fatestTime2', latestTime);
+      prefs.setInt('fastestTime2', latestTime);
       fastestTime = (prefs.getInt('fastestTime2') ?? 0);
     });
   }

@@ -96,8 +96,21 @@ class UploadImagePageState extends State<UploadImagePage>{
           : RefreshIndicator(
         onRefresh: _loadCards ,
         child:  Column(children: [
+          SizedBox(height:screenHeight/20),
+          const Text(
+                'Upload image here and play them in "SP" level',
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.brown,
+                  fontSize: 18
+                ),
+              ),
+            SizedBox(height:screenHeight/20),
          _cardList == null ?  const Flexible(
           child: Center(child: Text("No Data")),):
+
              Flexible(
                child: Center(
                   child: Padding(

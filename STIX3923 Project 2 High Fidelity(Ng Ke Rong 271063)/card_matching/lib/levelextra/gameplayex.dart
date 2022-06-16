@@ -64,6 +64,7 @@ Color otherColor2 = Color(0x00000000);
      loadColor();
   }
 
+
   void loadScore() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
@@ -103,15 +104,15 @@ Color otherColor2 = Color(0x00000000);
   void loadTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
-      fastestTime = (prefs.getInt('fatestTimeEx') ?? 0);
+      fastestTime = (prefs.getInt('fastestTimeEx') ?? 0);
     });
   }
 
   void updateTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setInt('fatestTimeEx', latestTime);
-      fastestTime = (prefs.getInt('fatestTimeEx') ?? 0);
+      prefs.setInt('fastestTimeEx', latestTime);
+      fastestTime = (prefs.getInt('fastestTimeEx') ?? 0);
     });
   }
 

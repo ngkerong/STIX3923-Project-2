@@ -77,7 +77,7 @@ Color otherColor2 = Color(0x00000000);
   void updateTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setInt('fatestTime5', latestTime);
+      prefs.setInt('fastestTime5', latestTime);
       fastestTime = (prefs.getInt('fastestTime5') ?? 0);
     });
   }

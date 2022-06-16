@@ -183,7 +183,7 @@ class DeleteImagePageState extends State<DeleteImagePage>{
   }
    _deleteProduct(int index) {
     ProgressDialog progressDialog = ProgressDialog(context,
-        message: const Text("Deleting product.."),
+        message: const Text("Deleting image.."),
         title: const Text("Processing..."));
     progressDialog.show();
     http.post(Uri.parse(Config.server + "/card_matching/php/deletecard.php"),
