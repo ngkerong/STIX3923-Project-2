@@ -18,10 +18,19 @@ class SettingPageState extends State<SettingPage>{
   bool audio = true;
   String latestCol = " ";
   String selectCol = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
+  String selectedLang = " ";
   List<String> colorlist = [
      "Default",
      "Blue",
      "Red",
+   ];
+  List<String> langlist = [
+     "English",
+     "Malay",
    ];
   Color color1 = Color(0xFFFFECB3);
   Color color2 = Color(0xFFE1F5FE);
@@ -35,6 +44,7 @@ class SettingPageState extends State<SettingPage>{
     super.initState();
     setState((){
       loadColor();
+      loadLanguage();
     });
   }
 
@@ -46,6 +56,14 @@ class SettingPageState extends State<SettingPage>{
     });
   }
 
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +71,7 @@ class SettingPageState extends State<SettingPage>{
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Main Page",
+        title:  Text("$lang1",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
       ),
       body: Container(
@@ -63,14 +81,14 @@ class SettingPageState extends State<SettingPage>{
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-                'Background Music',
+             Text(
+                '$lang2',
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.brown,
-                  fontSize: 35
+                  fontSize: 28
                 ),
               ),
               SizedBox(height: screenHeight/20),
@@ -101,14 +119,14 @@ class SettingPageState extends State<SettingPage>{
              
   ),),
             SizedBox(height: screenHeight/18),
-            const Text(
-                'Background Color',
+             Text(
+                '$lang3',
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.brown,
-                  fontSize: 35
+                  fontSize: 28
                 ),
               ),
               SizedBox(height: screenHeight/20),
@@ -134,6 +152,42 @@ class SettingPageState extends State<SettingPage>{
                 value: selectCol,
                 );
               }).toList(),
+          ),),
+
+          SizedBox(height: screenHeight/18),
+             Text(
+                '$lang4',
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.brown,
+                  fontSize: 28
+                ),
+              ),
+              SizedBox(height: screenHeight/20),
+              DecoratedBox(
+                decoration: const BoxDecoration( 
+                  color:Colors.white,
+                ),
+            child: DropdownButton(
+              itemHeight: 60,
+              value: selectedLang,
+              
+              onChanged: (newValue){
+                setState((){
+                  selectedLang = newValue.toString();
+                  _language();
+                });
+              },
+              items: langlist.map((selectedLang){
+                return DropdownMenuItem(
+                  child : Text(
+                    selectedLang,
+                  ),
+                value: selectedLang,
+                );
+              }).toList(),
           ),)
           ]))
     );
@@ -144,6 +198,15 @@ class SettingPageState extends State<SettingPage>{
       prefs.setString('colorCode', selectCol);
       selectCol = (prefs.getString('colorCode') ?? "Default");
       bgm1();
+      });
+  }
+
+  Future <void> _language() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     setState((){
+      prefs.setString('languageSet', selectedLang);
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
       });
   }
   
@@ -168,4 +231,26 @@ void bgm1() async{
     otherColor = Color(value);
     });
 }
+
+  void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Background Music";
+        lang3 = "Background Color";
+        lang4 = "Language";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Lagu Latar Belakang";
+        lang3 = "Warna Latar Belakang";
+        lang4 = "Bahasa";
+        break;
+
+    }
+    });
+  }
 }

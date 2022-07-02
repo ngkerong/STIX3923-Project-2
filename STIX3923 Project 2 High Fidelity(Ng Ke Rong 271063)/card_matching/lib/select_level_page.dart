@@ -26,6 +26,11 @@ class SelectLevelPageState extends State<SelectLevelPage>{
   late List _cardList = [];
   String selectCol = " ";
   String latestCol = " ";
+  String selectedLang = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
   Color color1 = Color(0xFFFFECB3);
   Color color2 = Color(0xFFE1F5FE);
   Color color3=  Color(0xFFFFCDD2); 
@@ -39,6 +44,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
     setState(() {
     _loadCards();
     loadColor();
+    loadLanguage();
     });
   }
 
@@ -47,6 +53,14 @@ class SelectLevelPageState extends State<SelectLevelPage>{
     setState((){
       selectCol = (prefs.getString('colorCode') ?? "Default");
       bgm1();
+    });
+  }
+
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
     });
   }
 
@@ -70,6 +84,28 @@ class SelectLevelPageState extends State<SelectLevelPage>{
     otherColor = Color(value);
 }
 
+  void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Select Level";
+        lang3 = "Message";
+        lang4 = "Upload more than 2 images to unlock this level.\n\nOr\n\nInternet connection is not active.";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Pilih Level";
+        lang3 = "Mesej";
+        lang4 = "Muat naik lebih dari 2 gambar untuk membuka level ini.\n\nAtau\n\nTalian Internet tidak aktif.";
+        break;
+
+    }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -77,7 +113,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Back",
+        title:  Text("$lang1",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
       ),
       body: Container(
@@ -86,8 +122,8 @@ class SelectLevelPageState extends State<SelectLevelPage>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-                'Tap the level you want to play',
+           Text(
+                '$lang2',
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -248,7 +284,7 @@ class SelectLevelPageState extends State<SelectLevelPage>{
                     imageDialog();
                     }
                   },
-                  child: const Text("Sp",style: TextStyle(fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold)),
+                  child: const Text("Custom",style: TextStyle(fontSize: 16, color: Colors.brown, fontWeight: FontWeight.bold)),
                 ),
             ),
             
@@ -287,11 +323,11 @@ void imageDialog(){
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Message",
+          title: Text(
+            "$lang3",
             style: TextStyle(fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
           ),
-          content: const Text("The amount of images upload must be more than 2 to play this level.", style: TextStyle()),
+          content:Text("$lang4", style: TextStyle()),
           actions: <Widget>[
             TextButton(
               child: const Text(

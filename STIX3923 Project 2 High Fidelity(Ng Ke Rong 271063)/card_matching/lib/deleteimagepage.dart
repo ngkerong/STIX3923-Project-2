@@ -8,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:device_info/device_info.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DeleteImagePage extends StatefulWidget {
@@ -29,6 +29,24 @@ class DeleteImagePageState extends State<DeleteImagePage>{
   File? _image;
   var pathAsset = "assets/images/add-image.png"; 
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  String selectedLang = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
+  String lang5 = " ";
+  String lang6 = " ";
+  String lang7 = " ";
+  String lang8 = " ";
+  String lang9 = " ";
+  String latestCol = " ";
+  String selectCol = " ";
+  Color color1 = Color(0xFFFFECB3);
+  Color color2 = Color(0xFFE1F5FE);
+  Color color3=  Color(0xFFFFCDD2); 
+  String valueString =" ";
+  int value = 0;
+  Color otherColor = Color(0x00000000);
 
   @override
   void initState() {
@@ -36,9 +54,80 @@ class DeleteImagePageState extends State<DeleteImagePage>{
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _loadCards();
+    loadLanguage();
+    loadColor();
   }
 
- 
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
+    });
+  }
+
+  void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Delete this image";
+        lang3 = "Are you sure?";
+        lang4 = "Yes";
+        lang5 = "No";
+        lang6 = "Deleting image..";
+        lang7 = "Processing...";
+        lang8 = "Success";
+        lang9 = "Failed";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Padamkan gambar ini";
+        lang3 = "Adakah anda pasti?";
+        lang4 = "Ya";
+        lang5 = "Tidak";
+        lang6 = "Pandamkan Gambar..";
+        lang7 = "Memproses...";
+        lang8 = "Berjaya";
+        lang9 = "Gagal";
+        break;
+
+    }
+    });
+  }
+
+  void loadColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
+    });
+  }
+
+  void bgm1() async{
+  
+  setState((){
+    switch (selectCol) {
+      case "Default":
+        latestCol = color1.toString();
+        break;
+
+      case "Blue":
+        latestCol = color2.toString();
+        break;
+
+      case "Red":
+        latestCol = color3.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor = Color(value);
+    });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +136,7 @@ class DeleteImagePageState extends State<DeleteImagePage>{
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Back",
+        title: Text("$lang1",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
 
       ),
@@ -88,7 +177,7 @@ class DeleteImagePageState extends State<DeleteImagePage>{
         
                 ]),
                 decoration: BoxDecoration(
-                    color: Colors.amber[100],
+                    color: otherColor,
                     borderRadius: BorderRadius.circular(15)),
                 ),
                 onTap: () =>{_onDeleteImage(index)} ,
@@ -151,15 +240,15 @@ class DeleteImagePageState extends State<DeleteImagePage>{
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Delete this image",
+          title: Text(
+            "$lang2",
             style: TextStyle(),
           ),
-          content: const Text("Are you sure?", style: TextStyle()),
+          content: Text("$lang3", style: TextStyle()),
           actions: <Widget>[
             TextButton(
-              child: const Text(
-                "Yes",
+              child:  Text(
+                "$lang4",
                 style: TextStyle(),
               ),
               onPressed: () {
@@ -168,8 +257,8 @@ class DeleteImagePageState extends State<DeleteImagePage>{
               },
             ),
             TextButton(
-              child: const Text(
-                "No",
+              child: Text(
+                "$lang5",
                 style: TextStyle(),
               ),
               onPressed: () {
@@ -183,8 +272,8 @@ class DeleteImagePageState extends State<DeleteImagePage>{
   }
    _deleteProduct(int index) {
     ProgressDialog progressDialog = ProgressDialog(context,
-        message: const Text("Deleting image.."),
-        title: const Text("Processing..."));
+        message: Text("$lang6"),
+        title:  Text("$lang7"));
     progressDialog.show();
     http.post(Uri.parse(Config.server + "/card_matching/php/deletecard.php"),
         body: {
@@ -195,7 +284,7 @@ class DeleteImagePageState extends State<DeleteImagePage>{
       
       if (response.statusCode == 200 && data['status'] == 'success') {
         Fluttertoast.showToast(
-            msg: "Success",
+            msg: "$lang8",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -205,7 +294,7 @@ class DeleteImagePageState extends State<DeleteImagePage>{
         return;
       } else {
         Fluttertoast.showToast(
-            msg: "Failed",
+            msg: "$lang9",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,

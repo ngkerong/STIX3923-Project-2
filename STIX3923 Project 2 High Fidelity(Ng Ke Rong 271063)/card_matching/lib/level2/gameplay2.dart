@@ -5,7 +5,7 @@ import 'cardimage.dart';
 import "dart:async";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:card_matching/level3/gameplay3.dart';
-
+import 'package:flame_audio/flame_audio.dart';  
 
 class GamePlay2Page extends StatefulWidget {
   const GamePlay2Page({Key? key}) : super(key: key);
@@ -111,6 +111,7 @@ Color otherColor2 = Color(0x00000000);
                 updateTime();
               }
           counter = 0;
+          FlameAudio.play('success.mp3');
           successDialog();
         }
       });
@@ -215,6 +216,7 @@ void bgm2() async{
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
+                        FlameAudio.play('flip.mp3');
                         loadScore();
                         counter++;
                         if (counter == 1) {
@@ -232,6 +234,7 @@ void bgm2() async{
                               _game.matchCheck[1].values.first) {
                             
                             //incrementing the score
+                            FlameAudio.play('score.mp3');
                             score += 100;
                             _game.matchCheck.clear();
                           } else {

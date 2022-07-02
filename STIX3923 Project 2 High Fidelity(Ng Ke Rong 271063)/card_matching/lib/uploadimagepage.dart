@@ -8,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'addimagepage.dart';
 import 'deleteimagepage.dart';
 import 'package:device_info/device_info.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadImagePage extends StatefulWidget {
   const UploadImagePage({Key? key}) : super(key: key);
@@ -21,12 +21,25 @@ class UploadImagePage extends StatefulWidget {
 class UploadImagePageState extends State<UploadImagePage>{
 
   late List _cardList = [];
-  String textCenter = "Please Upload an Image";
   late double screenHeight, screenWidth;
   late ScrollController _scrollController;
   int scrollcount = 10;
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   String deviceID = " ";
+  String selectedLang = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
+  String lang5 = " ";
+  String latestCol = " ";
+  String selectCol = " ";
+  Color color1 = Color(0xFFFFECB3);
+  Color color2 = Color(0xFFE1F5FE);
+  Color color3=  Color(0xFFFFCDD2); 
+  String valueString =" ";
+  int value = 0;
+  Color otherColor = Color(0x00000000);
 
 
   @override
@@ -35,10 +48,71 @@ class UploadImagePageState extends State<UploadImagePage>{
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _loadCards();
-   
+    loadLanguage();
+    loadColor();
   }
 
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
+    });
+  }
+
+  void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Please Upload an Image here.";
+        lang3 = "Upload image and play them in Level Custom";
+        lang4 = "Message";
+        lang5 = "The limited amount of image is 8. Please delete some of the images.";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Muat Naik Gambar di sini.";
+        lang3 = "Muat naik gambar dan mainkan di Level Custom";
+        lang4 = "Mesej";
+        lang5 = "Jumlah gambar yang terhad ialah 8. Sila padamkan beberapa gambar.";
+        break;
+
+    }
+    });
+  }
+
+  void loadColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm1();
+    });
+  }
+
+  void bgm1() async{
   
+  setState((){
+    switch (selectCol) {
+      case "Default":
+        latestCol = color1.toString();
+        break;
+
+      case "Blue":
+        latestCol = color2.toString();
+        break;
+
+      case "Red":
+        latestCol = color3.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor = Color(value);
+    });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +121,7 @@ class UploadImagePageState extends State<UploadImagePage>{
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Main Page",
+        title: Text("$lang1",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
         actions: <Widget>[
     IconButton(
@@ -90,21 +164,21 @@ class UploadImagePageState extends State<UploadImagePage>{
       ),
       body: _cardList.isEmpty
         ? Center(
-                child: Text(textCenter,
+                child: Text("$lang2",
                     style: const TextStyle(
                         fontSize: 22, fontWeight: FontWeight.bold)))
           : RefreshIndicator(
         onRefresh: _loadCards ,
         child:  Column(children: [
           SizedBox(height:screenHeight/20),
-          const Text(
-                'Upload image here and play them in "SP" level',
+          Text(
+                '$lang3',
                 textAlign: TextAlign.left,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.brown,
-                  fontSize: 18
+                  fontSize: 15
                 ),
               ),
             SizedBox(height:screenHeight/20),
@@ -137,7 +211,7 @@ class UploadImagePageState extends State<UploadImagePage>{
                       style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 17)),
                 ]),
                 decoration: BoxDecoration(
-                    color: Colors.amber[100],
+                    color: otherColor,
                     borderRadius: BorderRadius.circular(15)),
                 ),
               );
@@ -164,7 +238,7 @@ class UploadImagePageState extends State<UploadImagePage>{
       var jsonData = response.body;
       var parsedJson = json.decode(jsonData);
       _cardList = parsedJson['data']['cards'];
-      textCenter = "Contain Data";
+      lang2 = "Contain Data";
       if (scrollcount >= _cardList.length) {
             scrollcount = _cardList.length;
           }
@@ -172,7 +246,7 @@ class UploadImagePageState extends State<UploadImagePage>{
       );
         print(_cardList);
       } else {
-        textCenter = "No data";
+        lang2 = "No data";
         return;
       } 
   });
@@ -199,11 +273,11 @@ class UploadImagePageState extends State<UploadImagePage>{
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Message",
+          title: Text(
+            "$lang4",
             style: TextStyle(fontSize: 30, color: Colors.brown, fontWeight: FontWeight.bold),
           ),
-          content: const Text("The limited amount of image is 8. Please delete some of the images.", style: TextStyle()),
+          content: Text("$lang5", style: TextStyle()),
           actions: <Widget>[
             TextButton(
               child: const Text(

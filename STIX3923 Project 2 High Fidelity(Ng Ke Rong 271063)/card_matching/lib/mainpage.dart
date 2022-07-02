@@ -22,6 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String getColor = '';
   String selectCol = " ";
   String latestCol = " ";
+  String selectedLang = " ";
+  String lang1 = " ";
   Color color1 = Color(0xFFFFECB3);
   Color color2 = Color(0xFFE1F5FE);
   Color color3=  Color(0xFFFFCDD2); 
@@ -38,8 +40,9 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     setState((){
     FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('bgm.mp3', volume: 100);
+    FlameAudio.bgm.play('bgm.mp3', volume: 30);
     loadColor();
+    loadLanguage();
     });
   }
 
@@ -49,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
       selectCol = (prefs.getString('colorCode') ?? "Default");
       bgm1();
       bgm2();
+    });
+  }
+
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
     });
   }
 
@@ -92,6 +103,21 @@ void bgm2() async{
     otherColor2 = Color(value);
 }
 
+void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Play Game";
+        break;
+
+      case "Malay":
+        lang1 = "Mula Main";
+        break;
+
+    }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +208,7 @@ void bgm2() async{
               Navigator.push(context, MaterialPageRoute(
                 builder: (BuildContext context) => const SelectLevelPage()));
               },
-            child:  const Text('Play Game',
+            child: Text('$lang1',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.brown,
@@ -203,7 +229,7 @@ void bgm2() async{
             ),
             child: IconButton(
               iconSize: 60,
-              icon: const Icon(Icons.image_outlined),
+              icon: const Icon(Icons.upload_outlined),
               color: Colors.brown,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
@@ -225,6 +251,7 @@ void bgm2() async{
                 Navigator.push( context, MaterialPageRoute( builder: (context) => SettingPage()), 
               ).then((value) => setState(() {
                 loadColor();
+                loadLanguage();
               }));
               },
   ),),

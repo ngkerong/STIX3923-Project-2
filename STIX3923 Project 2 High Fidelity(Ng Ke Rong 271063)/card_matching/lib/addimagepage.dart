@@ -9,6 +9,7 @@ import 'package:ndialog/ndialog.dart';
 import 'package:flutter/services.dart';
 import 'package:card_matching/model/config.dart';
 import 'package:device_info/device_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddImagePage extends StatefulWidget {
 
@@ -24,12 +25,120 @@ class _AddImagePageState extends State<AddImagePage> {
   var pathAsset = "assets/images/add-image.png";
   DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   String deviceID = " ";
+  String selectedLang = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
+  String lang5 = " ";
+  String lang6 = " ";
+  String lang7 = " ";
+  String lang8 = " ";
+  String lang9 = " ";
+  String lang10 = " ";
+  String lang11 = " ";
+  String lang12 = " ";
+  String lang13 = " ";
+  String lang14 = " ";
+  String lang15 = " ";
+  String lang16 = " ";
+  String selectCol = " ";
+  String latestCol = " ";
+   Color color4 = Color(0xFFFDD54F);
+  Color color5 = Color(0xFF8C9EFF);
+  Color color6 = Color(0xFFF48FB1);
+  String valueString =" ";
+  int value = 0;
+  Color otherColor2 = Color(0x00000000);
   
   @override
   void initState() {
     super.initState();
     getDeviceID();
-    
+    loadColor();
+    loadLanguage();
+  }
+
+   void loadColor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectCol = (prefs.getString('colorCode') ?? "Default");
+      bgm2();
+    });
+  }
+
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
+    });
+  }
+
+  void bgm2() async{
+  
+    switch (selectCol) {
+      case "Default":
+        latestCol = color4.toString();
+        break;
+
+      case "Blue":
+        latestCol = color5.toString();
+        break;
+
+      case "Red":
+        latestCol = color6.toString();
+        break;
+    }
+    valueString = latestCol.split('(0x')[1].split(')')[0]; // kind of hacky..
+    value = int.parse(valueString, radix: 16);
+    otherColor2 = Color(value);
+}
+
+void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Add Image";
+        lang3 = "Select from";
+        lang4 = "Gallery";
+        lang5 = "Camera";
+        lang6 = "Crop";
+        lang7 = "Crop Image";
+        lang8 = "Please upload image";
+        lang9 = "Add this image";
+        lang10 = "Are you sure?";
+        lang11 = "Yes";
+        lang12 = "No";
+        lang13 = "Adding new image..";
+        lang14 = "Processing...";
+        lang15 = "Success";
+        lang16 = "Failed";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Tambah Gambar";
+        lang3 = "Pilih dari";
+        lang4 = "Galeri";
+        lang5 = "Kamera";
+        lang6 = "Potong";
+        lang7 = "Potong Gambar";
+        lang8 = "Sila muat naik gambar";
+        lang9 = "Tambah gambar ini";
+        lang10 = "Adakah anda pasti?";
+        lang11 = "Ya";
+        lang12 = "Tidak";
+        lang13 = "Tambahkan Gambar Baru..";
+        lang14 = "Memproses...";
+        lang15= "Berjaya";
+        lang16 = "Gagal";
+        break;
+
+    }
+    });
   }
 
   void getDeviceID()async {
@@ -46,7 +155,7 @@ class _AddImagePageState extends State<AddImagePage> {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Back"),
+        title: Text("$lang1", style: TextStyle (fontSize: 20, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
       ),
       body: Column(
         children: [
@@ -74,8 +183,9 @@ class _AddImagePageState extends State<AddImagePage> {
                           height: 15),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                    primary: otherColor2,
                     fixedSize: Size(screenWidth, screenHeight / 13)),
-                child: const Text('Add Image'),
+                child: Text('$lang2', style: TextStyle (fontSize: 18,  fontWeight: FontWeight.bold)),
                 onPressed: () => {_newImageDialog(),}
                           
                         ),
@@ -91,8 +201,8 @@ class _AddImagePageState extends State<AddImagePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: const Text(
-              "Select from",
+            title: Text(
+              "$lang3",
               style: TextStyle(),
             ),
             content: Row(
@@ -101,7 +211,7 @@ class _AddImagePageState extends State<AddImagePage> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: Size(screenWidth / 5, screenHeight / 10)),
-                  child: const Text('Gallery'),
+                  child:Text('$lang4' , style: TextStyle (fontSize: 12)),
                   onPressed: () => {
                     Navigator.of(context).pop(),
                     _selectfromGallery(),
@@ -111,7 +221,7 @@ class _AddImagePageState extends State<AddImagePage> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: Size(screenWidth / 5, screenHeight / 10)),
-                  child: const Text('Camera'),
+                  child: Text('$lang5',style: TextStyle (fontSize: 12)),
                   onPressed: () => {
                     Navigator.of(context).pop(),
                     _selectFromCamera(),
@@ -163,13 +273,13 @@ class _AddImagePageState extends State<AddImagePage> {
             : [
                 CropAspectRatioPreset.square,
               ],
-        androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'Crop',
+        androidUiSettings:  AndroidUiSettings(
+            toolbarTitle: '$lang6',
             toolbarColor: Colors.deepOrange,
             initAspectRatio: CropAspectRatioPreset.square,
             lockAspectRatio: false),
-        iosUiSettings: const IOSUiSettings(
-          title: 'Crop Image',
+        iosUiSettings:  IOSUiSettings(
+          title: '$lang7',
         ));
     if (croppedFile != null) {
       _image = croppedFile;
@@ -179,7 +289,7 @@ class _AddImagePageState extends State<AddImagePage> {
   void _newImageDialog() {
     if (_image == null) {
       Fluttertoast.showToast(
-          msg: "Please upload picture",
+          msg: "$lang8",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
@@ -193,15 +303,15 @@ class _AddImagePageState extends State<AddImagePage> {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Add this image",
+          title: Text(
+            "$lang9",
             style: TextStyle(),
           ),
-          content: const Text("Are you sure?", style: TextStyle()),
+          content: Text("$lang10", style: TextStyle()),
           actions: <Widget>[
             TextButton(
-              child: const Text(
-                "Yes",
+              child: Text(
+                "$lang11",
                 style: TextStyle(),
               ),
               onPressed: () {
@@ -211,8 +321,8 @@ class _AddImagePageState extends State<AddImagePage> {
               },
             ),
             TextButton(
-              child: const Text(
-                "No",
+              child: Text(
+                "$lang12",
                 style: TextStyle(),
               ),
               onPressed: () {
@@ -230,8 +340,8 @@ class _AddImagePageState extends State<AddImagePage> {
     
     FocusScope.of(context).unfocus();
     ProgressDialog progressDialog = ProgressDialog(context,
-        message: const Text("Adding new image.."),
-        title: const Text("Processing..."));
+        message: Text("$lang13"),
+        title: Text("$lang14"));
     progressDialog.show();
 
     String base64Image = base64Encode(_image!.readAsBytesSync());
@@ -244,7 +354,7 @@ class _AddImagePageState extends State<AddImagePage> {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {
         Fluttertoast.showToast(
-            msg: "Success",
+            msg: "$lang15",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -254,7 +364,7 @@ class _AddImagePageState extends State<AddImagePage> {
         return;
       }else{
          Fluttertoast.showToast(
-            msg: "Failed",
+            msg: "$lang16",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
