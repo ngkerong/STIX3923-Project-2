@@ -24,6 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String latestCol = " ";
   String selectedLang = " ";
   String lang1 = " ";
+  String lang2 = " ";
   Color color1 = Color(0xFFFFECB3);
   Color color2 = Color(0xFFE1F5FE);
   Color color3=  Color(0xFFFFCDD2); 
@@ -109,10 +110,12 @@ void setLanguage() async{
     switch (selectedLang) {
       case "English":
         lang1 = "Play Game";
+        lang2 = "Copyrighted images by";
         break;
 
       case "Malay":
         lang1 = "Mula Main";
+        lang2 = "Gambar berhak cipta oleh";
         break;
 
     }
@@ -137,7 +140,17 @@ void setLanguage() async{
         lowerHalf(context)
       ],
       ),
-    ));
+    ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+        copyrightDialog();},
+        child: const Icon(
+          Icons.copyright_outlined,
+          color: Colors.brown,
+          size: 40,),
+        backgroundColor: Colors.orange[50]
+      ), 
+    );
   }
   Widget upperHalf(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -256,12 +269,43 @@ void setLanguage() async{
               },
   ),),
       ],
-          )
+          ),
+          
 	  
             ],
           ),
+          
         );   
 
+  }
+
+  void copyrightDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text(
+            "$lang2",
+            style: TextStyle(fontSize: 18, color: Colors.brown, fontWeight: FontWeight.bold),
+          ),
+          content:Text("sudowoodo\ndrical\nNopee_erini\nNavakun Suwantragul\nanimicsgo\nTenor\nsetory\nQianTuWang\nMaxis\nAmethystDesign\nIcongeek26\neucalyp\nFlat-icons-com\nFreepik\nSmashicons"
+          , style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Ok",
+                style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -287,3 +331,5 @@ class CurvedBottomClipper extends CustomClipper<Path> {
     return true;
   }
 }
+
+
