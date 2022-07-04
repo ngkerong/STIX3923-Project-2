@@ -32,6 +32,15 @@ class GamePlay5PageState extends State<GamePlay5Page> {
   Color color5 = Color(0xFF8C9EFF);
   Color color6 = Color(0xFFF48FB1);
   Color otherColor2 = Color(0x00000000);
+  String selectedLang = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
+  String lang5 = " ";
+  String lang6 = " ";
+  String lang7 = " ";
+  String lang8 = " ";
 
   //game stats
   double latestScore = 0;
@@ -50,6 +59,8 @@ class GamePlay5PageState extends State<GamePlay5Page> {
      loadTime();
     _game.cards_list.shuffle();
     loadColor();
+    loadLanguage();
+    setLanguage();
   }
 
   void loadScore() async {
@@ -162,12 +173,50 @@ void bgm2() async{
     otherColor2 = Color(value);
 }
 
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
+    });
+  }
+
+  void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Time(s)";
+        lang3 = "Scores";
+        lang4 = "Highest Scores";
+        lang5 = "Fastest Time(s)";
+        lang6 = "Success";
+        lang7 = "Continue";
+        lang8 = "Restart";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Masa(s)";
+        lang3 = "Markah";
+        lang4 = "Markah Tertinggi";
+        lang5 = "Masa Terpantas(s)";
+        lang6 = "Berjaya";
+        lang7 = "Teruskan";
+        lang8 = "Mulakan Semula";
+        break;
+
+    }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:otherColor,
       appBar: AppBar(
-        title: const Text("Back",
+        title: Text("$lang1",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
       ),
       body: Column(
@@ -184,16 +233,16 @@ void bgm2() async{
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              cardInfo("Time(s)", timeleft.toString()),
-              cardInfo("Score", "$score"),
+              cardInfo("$lang2", timeleft.toString()),
+              cardInfo("$lang3", "$score"),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
-              cardInfo("Highest Score","$highestScore"),
-              cardInfo("Fatest Time(s)","$fastestTime")
+              cardInfo("$lang4","$highestScore"),
+              cardInfo("$lang5","$fastestTime")
             ],
           ),
           SizedBox(
@@ -271,15 +320,15 @@ void bgm2() async{
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Success",
+          title:  Text(
+            "$lang6",
             style: TextStyle(fontSize: 30, color: Colors.green, fontWeight: FontWeight.bold),
           ),
           actions: <Widget>[
             
             TextButton(
-              child: const Text(
-                "Replay",
+              child: Text(
+                "$lang7",
                 style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
               ),
               onPressed: () {

@@ -24,7 +24,7 @@ class GamePlay1PageState extends State<GamePlay1Page> {
   String getColor = '';
   String selectCol = " ";
   String latestCol = " ";
-Color color1 = Color(0xFFFFECB3);
+  Color color1 = Color(0xFFFFECB3);
   Color color2 = Color(0xFFE1F5FE);
   Color color3=  Color(0xFFFFCDD2); 
   Color color4 = Color(0xFFFDD54F);
@@ -34,6 +34,15 @@ Color color1 = Color(0xFFFFECB3);
   int value = 0;
   Color otherColor = Color(0x00000000);
   Color otherColor2 = Color(0x00000000);
+  String selectedLang = " ";
+  String lang1 = " ";
+  String lang2 = " ";
+  String lang3 = " ";
+  String lang4 = " ";
+  String lang5 = " ";
+  String lang6 = " ";
+  String lang7 = " ";
+  String lang8 = " ";
 
 
   //game stats
@@ -54,6 +63,8 @@ Color color1 = Color(0xFFFFECB3);
      loadTime();
     _game.cards_list.shuffle();
     loadColor();
+    loadLanguage();
+    setLanguage();
   }
 
   void loadScore() async {
@@ -87,7 +98,44 @@ Color color1 = Color(0xFFFFECB3);
       fastestTime = (prefs.getInt('fastestTime') ?? 0);
     });
   }
+  
+  void loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      selectedLang = (prefs.getString('languageSet') ?? "English");
+      setLanguage();
+    });
+  }
 
+  void setLanguage() async{
+
+    setState((){
+    switch (selectedLang) {
+      case "English":
+        lang1 = "Back";
+        lang2 = "Time(s)";
+        lang3 = "Scores";
+        lang4 = "Highest Scores";
+        lang5 = "Fastest Time(s)";
+        lang6 = "Success";
+        lang7 = "Continue";
+        lang8 = "Restart";
+        break;
+
+      case "Malay":
+        lang1 = "Kembali";
+        lang2 = "Masa(s)";
+        lang3 = "Markah";
+        lang4 = "Markah Tertinggi";
+        lang5 = "Masa Terpantas(s)";
+        lang6 = "Berjaya";
+        lang7 = "Teruskan";
+        lang8 = "Mulakan Semula";
+        break;
+
+    }
+    });
+  }
 
   void _countTimeLeft()  {
     
@@ -177,7 +225,7 @@ void bgm2() async{
     return Scaffold(
       backgroundColor:otherColor,
       appBar: AppBar(
-        title: const Text("Back",
+        title: Text("$lang1",
         style: TextStyle (fontSize: 30, color: Color(0xFF3E2723), fontWeight: FontWeight.bold)),
       ),
       body: Column(
@@ -194,16 +242,16 @@ void bgm2() async{
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              cardInfo("Time(s)", timeleft.toString()),
-              cardInfo("Score", "$score"),
+              cardInfo("$lang2", timeleft.toString()),
+              cardInfo("$lang3", "$score"),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
-              cardInfo("Highest Score","$highestScore"),
-              cardInfo("Fastest Time(s)","$fastestTime")
+              cardInfo("$lang4","$highestScore"),
+              cardInfo("$lang5","$fastestTime")
             ],
           ),
           SizedBox(
@@ -282,14 +330,14 @@ void bgm2() async{
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: const Text(
-            "Success",
+          title: Text(
+            "$lang6",
             style: TextStyle(fontSize: 30, color: Colors.green, fontWeight: FontWeight.bold),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text(
-                "Continue",
+              child: Text(
+                "$lang7",
                 style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
               ),
               onPressed: () {
@@ -300,8 +348,8 @@ void bgm2() async{
               },
             ),
             TextButton(
-              child: const Text(
-                "Replay",
+              child: Text(
+                "$lang8",
                 style: TextStyle(fontSize: 15, color: Colors.brown, fontWeight: FontWeight.bold),
               ),
               onPressed: () {

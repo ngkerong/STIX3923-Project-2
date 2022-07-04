@@ -210,6 +210,7 @@ void setLanguage() async{
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                      primary: otherColor2,
                       fixedSize: Size(screenWidth / 5, screenHeight / 10)),
                   child:Text('$lang4' , style: TextStyle (fontSize: 12)),
                   onPressed: () => {
@@ -220,6 +221,7 @@ void setLanguage() async{
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                      primary: otherColor2,
                       fixedSize: Size(screenWidth / 5, screenHeight / 10)),
                   child: Text('$lang5',style: TextStyle (fontSize: 12)),
                   onPressed: () => {
